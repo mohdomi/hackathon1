@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CargoSync - Space Arrangement</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #3b82f6;
+            --text-color: #1f2937;
+            --light-bg: #f3f4f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+            background: var(--light-bg);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 6rem auto 2rem;
+            padding: 0 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .storage-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #6b7280;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .progress-bar {
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress {
+            background: var(--primary-color);
+            height: 100%;
+            transition: width 0.3s;
+        }
+
+        .form-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .primary-btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .primary-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .secondary-btn {
+            background: #e5e7eb;
+            color: var(--text-color);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .secondary-btn:hover {
+            background: #d1d5db;
+        }
+
+        .danger-btn {
+            background: var(--danger-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .danger-btn:hover {
+            background: #dc2626;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 1rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            margin-bottom: -1rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .items-table th,
+        .items-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .items-table th {
+            background: var(--light-bg);
+            font-weight: 600;
+        }
+
+        .items-table tr:hover {
+            background: var(--light-bg);
+        }
+
+        .storage-zones {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .zone-container {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .viz-panel {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .viz-panel h4 {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .storage-viz {
+            height: 300px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 600px;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .close-modal:hover {
+            color: var(--text-color);
+        }
+
+        .task-list {
+            margin: 1.5rem 0;
+        }
+
+        .task-list ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .task-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        @media (max-width: 768px) {
+            .before-after {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-boxes"></i>
+                CargoSync
+            </a>
+            <div class="nav-links">
+                <a href="placement.html">ARRANGEMENTS</a>
+                <a href="retrieval.html">RETRIEVAL</a>
+                <a href="rearange.html">OPTIMISATION</a>
+                <a href="waste.html">WASTE MANAGEMENT</a>
+                <a href="return.html">CARGO RETURN</a>
+                <a href="logs.html">ANALYSIS</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">
+            <i class="fas fa-boxes-stacked"></i>
+            Space Arrangement Optimization
+        </h1>
+
+        <section class="section storage-overview">
+            <h2 class="section-title">Storage Bay Status</h2>
+            <div class="storage-stats">
+                <div class="stat-card">
+                    <h3>Total Capacity</h3>
+                    <p id="total-capacity">100 cubic meters</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Currently Used</h3>
+                    <p id="used-capacity">70 cubic meters</p>
+                    <div class="progress-bar">
+                        <div class="progress" id="capacity-progress" style="width: 70%;"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Space Available</h3>
+                    <p id="available-capacity">30 cubic meters</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section new-shipment">
+            <h2 class="section-title">New Shipment Details</h2>
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="shipment-volume">Shipment Volume (cubic meters)</label>
+                    <input type="number" id="shipment-volume" min="1" value="35">
+                </div>
+                <div class="form-group">
+                    <label for="shipment-priority">Priority Level</label>
+                    <select id="shipment-priority">
+                        <option value="Critical">Critical</option>
+                        <option value="High">High</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="shipment-contents">Shipment Contents</label>
+                    <textarea id="shipment-contents" rows="3" placeholder="Enter description of items...">Oxygen tanks, medical supplies, food rations</textarea>
+                </div>
+            </div>
+            <button id="analyze-btn" class="primary-btn">
+                <i class="fas fa-magnifying-glass-chart"></i> Analyze Space Requirements
+            </button>
+        </section>
+
+        <section class="section optimization-results" id="optimization-section" style="display: none;">
+            <h2 class="section-title">Optimization Results</h2>
+            <div class="alert" id="space-alert">
+                <p id="alert-message">Space shortage detected! We need to rearrange items to accommodate this shipment.</p>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="items-to-move">
+                    <i class="fas fa-arrows-up-down-left-right"></i> Items to Move
+                </button>
+                <button class="tab-btn" data-tab="new-arrangement">
+                    <i class="fas fa-layer-group"></i> New Arrangement
+                </button>
+                <button class="tab-btn" data-tab="visualization">
+                    <i class="fas fa-chart-bar"></i> Visualization
+                </button>
+            </div>
+
+            <div class="tab-content active" id="items-to-move">
+                <h3>Suggested Items to Relocate</h3>
+                <p>These items can be rearranged to create space for the new shipment:</p>
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Current Location</th>
+                            <th>Volume</th>
+                            <th>Priority</th>
+                            <th>New Location</th>
+                        </tr>
+                    </thead>
+                    <tbody id="items-to-move-body">
+                        <!-- This will be populated by JavaScript -->
+                    </tbody>
+                </table>
+                <div class="summary">
+                    <p>Total space recovered: <span id="space-recovered">0</span> cubic meters</p>
+                </div>
+            </div>
+
+            <div class="tab-content" id="new-arrangement">
+                <h3>New Storage Layout</h3>
+                <div class="storage-zones">
+                    <div class="zone-container" id="zones-container">
+                        <!-- This will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="notes">
+                    <h4>Notes:</h4>
+                    <ul id="arrangement-notes">
+                        <!-- This will be populated by JavaScript -->
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tab-content" id="visualization">
+                <h3>Space Utilization Visualization</h3>
+                <div class="visualization-container">
+                    <div class="before-after">
+                        <div class="viz-panel">
+                            <h4>Before Rearrangement</h4>
+                            <div class="storage-viz" id="before-viz">
+                                <!-- This will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <div class="viz-panel">
+                            <h4>After Rearrangement</h4>
+                            <div class="storage-viz" id="after-viz">
+                                <!-- This will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="approve-btn" class="primary-btn">
+                    <i class="fas fa-check"></i> Approve Rearrangement
+                </button>
+                <button id="modify-btn" class="secondary-btn">
+                    <i class="fas fa-pen-to-square"></i> Modify Plan
+                </button>
+                <button id="cancel-btn" class="danger-btn">
+                    <i class="fas fa-xmark"></i> Cancel
+                </button>
+            </div>
+        </section>
+
+        <div id="confirmation-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Rearrangement Approved</h2>
+                <p>The rearrangement plan has been approved and sent to the logistics team.</p>
+                <p>Estimated completion time: <span id="completion-time">45 minutes</span></p>
+                <div class="task-list">
+                    <h3>Tasks Generated:</h3>
+                    <ul id="task-list">
+                        <!-- This will be populated by JavaScript -->
+                    </ul>
+                </div>
+                <button id="close-modal-btn" class="primary-btn">
+                    <i class="fas fa-check"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/placement.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+{
+  "items": {
+    "item_001": {
+      "name": "Food Packet A",
+      "location": "storage_001",
+      "priority": 4,
+      "expiration_date": "2025-07-24",
+      "volume": 0.5,
+      "weight": 0.3,
+      "category": "food",
+      "status": "active",
+      "arrival_date": "2025-04-15",
+      "last_accessed": "2025-04-25 13:52:55"
+    },
+    "item_002": {
+      "name": "Medical Kit",
+      "location": "storage_002",
+      "priority": 5,
+      "expiration_date": "2025-10-22",
+      "volume": 2,
+      "weight": 1.5,
+      "category": "medical",
+      "status": "active",
+      "arrival_date": "2025-04-20",
+      "last_accessed": "2025-04-25 13:52:55"
+    }
+  },
+  "containers": {
+    "storage_001": {
+      "name": "Main Storage A",
+      "total_volume": 100,
+      "used_volume": 0.5,
+      "max_weight": 200,
+      "current_weight": 0.3,
+      "items": [
+        "item_001"
+      ],
+      "type": "storage",
+      "accessibility_factor": 0.9
+    },
+    "storage_002": {
+      "name": "Medical Storage",
+      "total_volume": 50,
+      "used_volume": 2,
+      "max_weight": 100,
+      "current_weight": 1.5,
+      "items": [
+        "item_002"
+      ],
+      "type": "storage",
+      "accessibility_factor": 0.8
+    }
+  },
+  "waste_containers": {
+    "waste_001": {
+      "name": "General Waste",
+      "total_volume": 30,
+      "used_volume": 0,
+      "max_weight": 50,
+      "current_weight": 0,
+      "waste_categories": [
+        "general",
+        "organic"
+      ],
+      "undock_date": "2025-05-25"
+    }
+  }
+}
