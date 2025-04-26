@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CargoSync - Advanced Cargo Handling Solutions</title>
+    <title>WarehouseHub - Advanced Warehouse Management</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -33,13 +33,14 @@
         }
 
         .header {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             padding: 1rem 2rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
+            backdrop-filter: blur(10px);
         }
 
         .nav-container {
@@ -57,7 +58,12 @@
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            transition: transform 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
         }
 
         .nav-links {
@@ -69,31 +75,23 @@
             color: var(--text-color);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .nav-links a:hover {
             color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.1);
         }
 
         .nav-right {
             display: flex;
             align-items: center;
             gap: 1rem;
-        }
-
-        .shop-btn {
-            background: var(--primary-color);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-
-        .shop-btn:hover {
-            background: var(--secondary-color);
         }
 
         .menu-toggle {
@@ -112,6 +110,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
         }
 
         .hero::before {
@@ -121,23 +120,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center/cover;
+            opacity: 0.2;
             z-index: 1;
-        }
-
-        .hero-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-
-        .hero-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
 
         .hero-content {
@@ -147,6 +132,18 @@
             color: white;
             padding: 0 2rem;
             max-width: 800px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .head h2 {
@@ -157,21 +154,55 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
+        .head p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
         .learn-more-btn {
-            display: inline-block;
-            background: var(--primary-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            color: var(--primary-color);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 2px solid white;
+        }
+
+        .learn-more-btn:hover {
+            background: transparent;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .secondary-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
             color: white;
             padding: 1rem 2rem;
             border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s;
-            border: 2px solid transparent;
+            border: 2px solid white;
         }
 
-        .learn-more-btn:hover {
-            background: transparent;
-            border-color: white;
+        .secondary-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
             transform: translateY(-2px);
         }
 
@@ -182,9 +213,22 @@
             max-width: 400px;
             background-color: rgba(255, 255, 255, 0.95);
             padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             z-index: 2;
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .company-description h3 {
@@ -192,6 +236,9 @@
             font-size: 1.5rem;
             margin-bottom: 1rem;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .company-description p {
@@ -218,6 +265,10 @@
                 margin: 2rem;
                 max-width: none;
             }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -225,19 +276,18 @@
     <header class="header">
         <div class="nav-container">
             <a href="index.html" class="logo">
-                <i class="fas fa-boxes"></i>
-                CargoSync
+                <i class="fas fa-warehouse"></i>
+                WarehouseHub
             </a>
             <div class="nav-links">
-                <a href="placement.html">ARRANGEMENTS</a>
-                <a href="retrieval.html">RETRIEVAL</a>
-                <a href="rearange.html">OPTIMISATION</a>
-                <a href="waste.html">WASTE MANAGEMENT</a>
-                <a href="return.html">CARGO RETURN</a>
-                <a href="logs.html">ANALYSIS</a>
+                <a href="placement.html"><i class="fas fa-boxes"></i> Inventory</a>
+                <a href="retrieval.html"><i class="fas fa-truck-loading"></i> Retrieval</a>
+                <a href="rearange.html"><i class="fas fa-exchange-alt"></i> Operations</a>
+                <a href="waste.html"><i class="fas fa-trash"></i> Disposal</a>
+                <a href="return.html"><i class="fas fa-undo"></i> Returns</a>
+                <a href="logs.html"><i class="fas fa-chart-line"></i> Analytics</a>
             </div>
             <div class="nav-right">
-    
                 <button class="menu-toggle" id="menuToggle">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -246,24 +296,25 @@
     </header>
 
     <section class="hero">
-        <div class="hero-image">
-            <img src="https://cdnb.artstation.com/p/assets/images/images/009/521/325/large/subin-kim-subin-kim-ship-bg.jpg" 
-                 alt="Advanced cargo handling system" 
-                 id="heroImage">
-        </div>
         <div class="hero-content">
             <div class="head">
-                <h2>REVOLUTIONIZING<br>CARGO<br>MANAGEMENT</h2>
-                <a href="/placement" class="learn-more-btn">
-                    <i class="fas fa-arrow-right"></i> EXPLORE SOLUTIONS
-                </a>
+                <h2>TRANSFORM YOUR<br>WAREHOUSE<br>MANAGEMENT</h2>
+                <p>Streamline your operations with our advanced warehouse management system. Optimize inventory, enhance efficiency, and reduce costs.</p>
+                <div class="cta-buttons">
+                    <a href="placement.html" class="learn-more-btn">
+                        <i class="fas fa-boxes"></i> Start Managing
+                    </a>
+                    <a href="logs.html" class="secondary-btn">
+                        <i class="fas fa-chart-line"></i> View Analytics
+                    </a>
+                </div>
             </div>
         </div>
     </section>
 
     <div class="company-description">
-        <h3>About CargoSync</h3>
-        <p>CargoSync revolutionizes cargo handling with advanced robotics and AI solutions. We specialize in automated placement, retrieval, and optimization of cargo in warehouses and shipping facilities. Our integrated systems maximize efficiency while minimizing waste, providing seamless logistics management for global supply chains.</p>
+        <h3><i class="fas fa-warehouse"></i> About WarehouseHub</h3>
+        <p>WarehouseHub revolutionizes warehouse management with advanced automation and intelligent solutions. We specialize in inventory management, efficient retrieval systems, and smart operations optimization. Our integrated platform maximizes productivity while minimizing waste, providing seamless warehouse management for modern businesses.</p>
     </div>
 
     <script src="js/app.js"></script>

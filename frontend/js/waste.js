@@ -78,7 +78,21 @@ function renderWasteItems() {
             <div class="waste-item-actions">
                 ${item.status === 'pending' ? 
                     `<button class="btn primary-btn process-btn" data-id="${item.id}">Process</button>` : 
-                    `<button class="btn secondary-btn" disabled>Processed</button>`}
+                    `<button class="btn secondary-btn" disabled style="padding: 0.75rem 1.0rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 100%;
+    display: flex
+;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 10px;
+    border-color:red
+    ">Processed</button>`}
                 <button class="btn danger-btn delete-btn" data-id="${item.id}">Remove</button>
             </div>
         `;

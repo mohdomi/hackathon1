@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CargoSync - Activity Analysis</title>
+    <title>WarehouseHub - Activity Analysis</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -32,13 +32,14 @@
         }
 
         .header {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             padding: 1rem 2rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
+            backdrop-filter: blur(10px);
         }
 
         .nav-container {
@@ -56,7 +57,12 @@
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            transition: transform 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
         }
 
         .nav-links {
@@ -68,11 +74,17 @@
             color: var(--text-color);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .nav-links a:hover {
             color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.1);
         }
 
         .container {
@@ -86,6 +98,9 @@
             font-weight: 700;
             margin-bottom: 2rem;
             color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .main-content {
@@ -97,8 +112,8 @@
         .logger-panel {
             background: white;
             padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .form-group {
@@ -107,7 +122,7 @@
 
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             font-weight: 500;
             color: var(--text-color);
         }
@@ -115,17 +130,19 @@
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.875rem;
             border: 2px solid #e5e7eb;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
+            background: var(--light-bg);
         }
 
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
             border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .button-group {
@@ -137,44 +154,47 @@
         .primary-btn {
             background: var(--primary-color);
             color: white;
-            padding: 0.75rem 1.5rem;
+            padding: 0.875rem 1.5rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
         }
 
         .primary-btn:hover {
             background: var(--secondary-color);
+            transform: translateY(-2px);
         }
 
         .secondary-btn {
-            background: #e5e7eb;
+            background: var(--light-bg);
             color: var(--text-color);
-            padding: 0.75rem 1.5rem;
+            padding: 0.875rem 1.5rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
         .secondary-btn:hover {
-            background: #d1d5db;
+            background: #e5e7eb;
+            transform: translateY(-2px);
         }
 
         .log-container {
             background: white;
             padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .log-filters {
@@ -186,24 +206,30 @@
 
         .log-filters input,
         .log-filters select {
-            padding: 0.5rem;
+            padding: 0.75rem;
             border: 2px solid #e5e7eb;
-            border-radius: 6px;
-            font-size: 0.9rem;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            background: var(--light-bg);
         }
 
-        .log-table-container {
-            overflow-x: auto;
+        .log-filters input:focus,
+        .log-filters select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
             margin-top: 1rem;
         }
 
         th, td {
-            padding: 1rem;
+            padding: 1.25rem 1rem;
             text-align: left;
             border-bottom: 1px solid #e5e7eb;
         }
@@ -212,6 +238,16 @@
             background: var(--light-bg);
             font-weight: 600;
             color: var(--text-color);
+            position: sticky;
+            top: 0;
+        }
+
+        th:first-child {
+            border-top-left-radius: 10px;
+        }
+
+        th:last-child {
+            border-top-right-radius: 10px;
         }
 
         tr:hover {
@@ -221,14 +257,14 @@
         .stats-panel {
             background: white;
             padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             margin-top: 2rem;
         }
 
         .stats-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
             margin-top: 1.5rem;
         }
@@ -236,19 +272,25 @@
         .stat-box {
             background: var(--light-bg);
             padding: 1.5rem;
-            border-radius: 8px;
+            border-radius: 12px;
             text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
         }
 
         .stat-label {
             display: block;
             color: #6b7280;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
         }
 
         .stat-value {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 600;
             color: var(--primary-color);
         }
@@ -273,40 +315,43 @@
     <header class="header">
         <div class="nav-container">
             <a href="index.html" class="logo">
-                <i class="fas fa-boxes"></i>
-                CargoSync
+                <i class="fas fa-warehouse"></i>
+                WarehouseHub
             </a>
             <div class="nav-links">
-                <a href="placement.html">ARRANGEMENTS</a>
-                <a href="retrieval.html">RETRIEVAL</a>
-                <a href="rearange.html">OPTIMISATION</a>
-                <a href="waste.html">WASTE MANAGEMENT</a>
-                <a href="return.html">CARGO RETURN</a>
-                <a href="logs.html">ANALYSIS</a>
+                <a href="placement.html"><i class="fas fa-boxes"></i> Inventory</a>
+                <a href="retrieval.html"><i class="fas fa-truck-loading"></i> Retrieval</a>
+                <a href="rearange.html"><i class="fas fa-exchange-alt"></i> Operations</a>
+                <a href="waste.html"><i class="fas fa-trash"></i> Disposal</a>
+                <a href="return.html"><i class="fas fa-undo"></i> Returns</a>
+                <a href="logs.html"><i class="fas fa-chart-line"></i> Analytics</a>
             </div>
         </div>
     </header>
 
     <div class="container">
-        <h1 class="page-title">Activity Analysis Dashboard</h1>
+        <h1 class="page-title">
+            <i class="fas fa-chart-line"></i>
+            Warehouse Activity Analysis
+        </h1>
         
         <div class="main-content">
             <div class="logger-panel">
                 <h2>Activity Logger</h2>
                 <div class="form-group">
-                    <label for="astronaut-id">Astronaut ID</label>
-                    <input type="text" id="astronaut-id" placeholder="Enter ID">
+                    <label for="worker-id">Worker ID</label>
+                    <input type="text" id="astronaut-id" placeholder="Enter Worker ID">
                 </div>
                 
                 <div class="form-group">
                     <label for="activity-type">Activity Type</label>
                     <select id="activity-type">
-                        <option value="EVA">EVA (Extravehicular Activity)</option>
+                        <option value="EVA">Loading/Unloading</option>
                         <option value="MAINT">Maintenance</option>
-                        <option value="EXP">Experiment</option>
-                        <option value="REST">Rest Period</option>
-                        <option value="EX">Exercise</option>
-                        <option value="MEAL">Meal Time</option>
+                        <option value="EXP">Inventory Check</option>
+                        <option value="REST">Break Period</option>
+                        <option value="EX">Equipment Operation</option>
+                        <option value="MEAL">Shift Change</option>
                         <option value="COMM">Communication</option>
                         <option value="EMER">Emergency Procedure</option>
                     </select>
@@ -315,11 +360,11 @@
                 <div class="form-group">
                     <label for="location">Location</label>
                     <select id="location">
-                        <option value="1">Module A</option>
-                        <option value="2">Module B</option>
-                        <option value="3">Module C</option>
-                        <option value="4">Airlock</option>
-                        <option value="5">External</option>
+                        <option value="1">Zone A</option>
+                        <option value="2">Zone B</option>
+                        <option value="3">Zone C</option>
+                        <option value="4">Loading Bay</option>
+                        <option value="5">External Area</option>
                     </select>
                 </div>
                 
@@ -343,7 +388,7 @@
                 <div class="log-filters">
                     <input type="text" id="log-search" placeholder="Search logs...">
                     <select id="filter-astronaut">
-                        <option value="">All Astronauts</option>
+                        <option value="">All Workers</option>
                     </select>
                     <select id="filter-activity">
                         <option value="">All Activities</option>
@@ -354,7 +399,7 @@
                         <thead>
                             <tr>
                                 <th>Timestamp</th>
-                                <th>Astronaut</th>
+                                <th>Worker</th>
                                 <th>Activity</th>
                                 <th>Duration</th>
                                 <th>Location</th>
@@ -370,9 +415,9 @@
         
         <div class="stats-panel">
             <h2>Activity Statistics</h2>
-            <div id="stats-container">
+            <div class="stats-container">
                 <div class="stat-box">
-                    <span class="stat-label">Total EVA Time</span>
+                    <span class="stat-label">Total Loading Time</span>
                     <span id="total-eva" class="stat-value">0 min</span>
                 </div>
                 <div class="stat-box">
@@ -380,7 +425,7 @@
                     <span id="activities-today" class="stat-value">0</span>
                 </div>
                 <div class="stat-box">
-                    <span class="stat-label">Power Usage</span>
+                    <span class="stat-label">Equipment Usage</span>
                     <span id="power-usage" class="stat-value">Low</span>
                 </div>
             </div>
