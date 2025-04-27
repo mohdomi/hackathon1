@@ -603,8 +603,9 @@
                 document.getElementById('objectsPlaced').textContent = 
                     parseInt(document.getElementById('objectsPlaced').textContent) + 1;
                 
-                // Update efficiency (random for demo)
-                const efficiency = Math.floor(Math.random() * 20) + 80;
+                // Update efficiency by +5 after every click
+                let currentEfficiency = parseInt(document.getElementById('placementEfficiency').textContent.replace('%', ''));
+                const efficiency = currentEfficiency + ((length * width * height)/1000);
                 document.getElementById('placementEfficiency').textContent = efficiency + '%';
 
                 // Add to dimensions table
@@ -625,9 +626,6 @@
                     </div>
                     <div>Available Space: ${100 - efficiency}%</div>
                 `;
-
-                // Show success notification
-                showNotification('Cargo added successfully!', 'success');
             });
 
             // Modal functionality
