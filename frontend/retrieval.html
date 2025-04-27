@@ -358,8 +358,7 @@
                 <a href="waste.html"><i class="fas fa-trash"></i> Disposal</a>
                 <a href="return.html"><i class="fas fa-undo"></i> Returns</a>
                 <a href="logs.html"><i class="fas fa-chart-line"></i> Analytics</a>
-                <a href="chat.html"><i class="fas fa-comments"></i> Chat</a>
-
+                <a href="chat.html"><i class="fas fa-comments"></i> AI Help</a>
             </div>
         </div>
     </header>
@@ -431,18 +430,25 @@
                 </button>
             </div>
         </div>
+
+        <!-- Add results section -->
+        <div class="retrieval-results" id="retrieval-results">
+            <h3><i class="fas fa-box"></i> Located Items</h3>
+            <div id="items-container"></div>
+        </div>
     </div>
 
     <script>
-        
         // Retrieval queue
         let retrievalQueue = [];
+        // Store retrieved items
+        let retrievedItems = [];
 
         // Retrieve items from API
         async function retrieveItems(itemName) {
             try {
                 // Make API call to backend
-                const response = await fetch(`/api/items/search?name=${itemName}`, {
+                const response = await fetch(`http://localhost:3022/api/items/search?name=${itemName}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -454,28 +460,39 @@
                 }
 
                 const data = await response.json();
+                
+                // Check if the response is an array or single object
+                const items = Array.isArray(data) ? data : [data];
+                
+                if (items.length === 0) {
+                    showNotification('No items found', 'warning');
+                    return [];
+                }
 
                 // Format the response data
-                const formattedItem = {
-                    id: data.id,
-                    name: data.name,
-                    location: data.location,
-                    status: data.status,
-                    quantity: data.quantity,
-                    priority: data.priority || 'normal'
-                };
+                const formattedItems = items.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    location: item.location || 'Unknown',
+                    status: item.status || 'available',
+                    quantity: item.quantity || 1,
+                    priority: item.priority || document.getElementById('priority').value || 'normal'
+                }));
+
+                // Store retrieved items globally
+                retrievedItems = formattedItems;
 
                 // Show success notification
-                showNotification('Item found successfully', 'success');
+                showNotification(`Found ${formattedItems.length} item(s)`, 'success');
                 
                 // Display the item details
-                displayResults([formattedItem], formattedItem.priority);
+                displayResults(formattedItems);
 
-                return formattedItem;
+                return formattedItems;
 
             } catch (err) {
                 showNotification(`Error: ${err.message}`, 'danger');
-                return null;
+                return [];
             }
         }
 
@@ -491,7 +508,7 @@
         locateBtn.addEventListener('click', async function() {
             const itemName = itemIdInput.value;
             if (!itemName) {
-                showNotification('Please enter an item name', 'danger');
+                showNotification('Please enter an item name', 'warning');
                 return;
             }
             await retrieveItems(itemName);
@@ -503,7 +520,9 @@
             locationSelect.value = '';
             prioritySelect.value = 'normal';
             const resultsSection = document.getElementById('retrieval-results');
-            resultsSection.style.display = 'none';
+            if (resultsSection) {
+                resultsSection.style.display = 'none';
+            }
         });
 
         // Handle refresh queue button click
@@ -512,9 +531,14 @@
         });
 
         // Display search results
-        function displayResults(items, priority) {
+        function displayResults(items) {
             const resultsSection = document.getElementById('retrieval-results');
             const container = document.getElementById('items-container');
+            
+            if (!resultsSection || !container) {
+                console.error('Results section or container not found');
+                return;
+            }
             
             resultsSection.style.display = 'block';
             container.innerHTML = '';
@@ -527,9 +551,13 @@
             items.forEach(item => {
                 const itemCard = document.createElement('div');
                 itemCard.className = 'item-card';
+                
+                // Use the item's priority or default to normal
+                const priority = item.priority || 'normal';
+                
                 itemCard.innerHTML = `
                     <div class="item-header">
-                        <span class="item-title">${item.name} (${item.id})</span>
+                        <span class="item-title">${item.name}${item.id ? ` (${item.id})` : ''}</span>
                         <span class="item-priority priority-${priority}">${priority.toUpperCase()}</span>
                     </div>
                     <div class="item-details">
@@ -561,7 +589,7 @@
 
         // Initiate retrieval process
         function initiateRetrieval(itemId) {
-            const item = inventoryItems.find(item => item.id === itemId);
+            const item = retrievedItems.find(item => item.id === itemId);
             if (item) {
                 item.status = 'in-progress';
                 retrievalQueue.push({
@@ -573,17 +601,21 @@
                 });
                 showNotification(`Retrieval initiated for ${item.name}`, 'success');
                 refreshQueue();
+            } else {
+                showNotification('Item not found in retrieved items', 'danger');
             }
         }
 
         // Cancel retrieval process
         function cancelRetrieval(itemId) {
-            const item = inventoryItems.find(item => item.id === itemId);
+            const item = retrievedItems.find(item => item.id === itemId);
             if (item) {
                 item.status = 'available';
                 retrievalQueue = retrievalQueue.filter(q => q.itemId !== itemId);
                 showNotification(`Retrieval cancelled for ${item.name}`, 'warning');
                 refreshQueue();
+            } else {
+                showNotification('Item not found in retrieved items', 'danger');
             }
         }
 
@@ -607,7 +639,7 @@
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
             notification.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'exclamation-circle'}"></i>
                 ${message}
             `;
             document.body.appendChild(notification);
@@ -617,11 +649,5 @@
             }, 3000);
         }
     </script>
-
-    <!-- Add results section -->
-    <div class="retrieval-results" id="retrieval-results">
-        <h3><i class="fas fa-box"></i> Located Items</h3>
-        <div id="items-container"></div>
-    </div>
 </body>
 </html>

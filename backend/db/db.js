@@ -123,6 +123,34 @@ dbRouter.post('/api/chatbot/query', async (req, res) => {
   }
 });
 
+dbRouter.get('/api/items/search', async (req, res) => {
+  try {
+    const { name } = req.query;
+    if (!name) {
+      return res.status(400).json({ message: 'Missing item name in query' });
+    }
+
+    // Find the first item that matches the name (case-insensitive, partial)
+    const item = await Item.findOne({ name: { $regex: name, $options: 'i' } });
+    if (!item) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+
+    res.json({
+      id: item._id,
+      name: item.name,
+      location: item.location,
+      status: item.status,
+      quantity: item.quantity,
+      priority: item.priority || 'normal'
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+
 export {
   dbRouter
 };
