@@ -6,6 +6,7 @@
     <title>WarehouseHub - Inventory Management</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style>
         :root {
             --primary-color: #2563eb;
@@ -300,6 +301,7 @@
                 <a href="waste.html"><i class="fas fa-trash"></i> Disposal</a>
                 <a href="return.html"><i class="fas fa-undo"></i> Returns</a>
                 <a href="logs.html"><i class="fas fa-chart-line"></i> Analytics</a>
+                <a href="chat.html"><i class="fas fa-comments"></i> Chat</a>
             </div>
         </div>
     </header>
@@ -385,27 +387,49 @@
     </div>
 
     <script>
-        // Store items in localStorage
-        let inventoryItems = JSON.parse(localStorage.getItem('inventoryItems')) || [];
+        let inventoryItems = [];
+
+        async function fetchInventoryItems() {
+            try {
+                const response = await axios.get("http://localhost:3022/api/items", {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                inventoryItems = response.data;
+                displayItems();
+            } catch (error) {
+                console.error("Error fetching inventory items:", error);
+            }
+        }
 
         // Function to add new item
-        document.getElementById('addItemForm').addEventListener('submit', function(e) {
+        document.getElementById('addItemForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const newItem = {
-                id: Date.now(),
                 name: document.getElementById('item-name').value,
                 category: document.getElementById('item-category').value,
                 quantity: document.getElementById('item-quantity').value,
                 location: document.getElementById('storage-location').value
             };
 
-            inventoryItems.push(newItem);
-            localStorage.setItem('inventoryItems', JSON.stringify(inventoryItems));
-            
-            displayItems();
+            await insertItemFunction(newItem);
+            await fetchInventoryItems();
             this.reset();
         });
+
+        async function insertItemFunction(newItem) {
+            try {
+                await axios.post("http://localhost:3022/api/items", newItem, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+            } catch (error) {
+                console.error("Error inserting item:", error);
+            }
+        }
 
         // Function to display items
         function displayItems() {
@@ -499,7 +523,7 @@
         }
 
         // Display items on page load
-        displayItems();
+        fetchInventoryItems();
     </script>
 </body>
 </html>

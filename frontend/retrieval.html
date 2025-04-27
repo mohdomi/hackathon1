@@ -358,6 +358,8 @@
                 <a href="waste.html"><i class="fas fa-trash"></i> Disposal</a>
                 <a href="return.html"><i class="fas fa-undo"></i> Returns</a>
                 <a href="logs.html"><i class="fas fa-chart-line"></i> Analytics</a>
+                <a href="chat.html"><i class="fas fa-comments"></i> Chat</a>
+
             </div>
         </div>
     </header>
@@ -373,8 +375,8 @@
                 <h3><i class="fas fa-search"></i> Find Item</h3>
                 <div class="retrieval-form" id="retrievalForm">
                     <div class="form-group">
-                        <label for="item-id">Item ID</label>
-                        <input type="text" id="item-id" placeholder="Enter item ID">
+                        <label for="item-id">Item Name</label>
+                        <input type="text" id="item-id" placeholder="Enter item name">
                     </div>
                     <div class="form-group">
                         <label for="location">Location</label>
@@ -432,16 +434,50 @@
     </div>
 
     <script>
-        // Sample inventory data (in a real application, this would come from a database)
-        let inventoryItems = [
-            { id: 'ITM001', name: 'Laptop', location: 'zone-a', status: 'available', quantity: 5 },
-            { id: 'ITM002', name: 'Printer', location: 'zone-b', status: 'available', quantity: 3 },
-            { id: 'ITM003', name: 'Monitor', location: 'zone-c', status: 'in-progress', quantity: 8 },
-            { id: 'ITM004', name: 'Keyboard', location: 'loading', status: 'available', quantity: 12 }
-        ];
-
+        
         // Retrieval queue
         let retrievalQueue = [];
+
+        // Retrieve items from API
+        async function retrieveItems(itemName) {
+            try {
+                // Make API call to backend
+                const response = await fetch(`/api/items/search?name=${itemName}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch item');
+                }
+
+                const data = await response.json();
+
+                // Format the response data
+                const formattedItem = {
+                    id: data.id,
+                    name: data.name,
+                    location: data.location,
+                    status: data.status,
+                    quantity: data.quantity,
+                    priority: data.priority || 'normal'
+                };
+
+                // Show success notification
+                showNotification('Item found successfully', 'success');
+                
+                // Display the item details
+                displayResults([formattedItem], formattedItem.priority);
+
+                return formattedItem;
+
+            } catch (err) {
+                showNotification(`Error: ${err.message}`, 'danger');
+                return null;
+            }
+        }
 
         // Get DOM elements
         const locateBtn = document.getElementById('locateBtn');
@@ -452,18 +488,13 @@
         const prioritySelect = document.getElementById('priority');
 
         // Handle locate item button click
-        locateBtn.addEventListener('click', function() {
-            const itemId = itemIdInput.value;
-            const location = locationSelect.value;
-            const priority = prioritySelect.value;
-
-            // Find matching items
-            const foundItems = inventoryItems.filter(item => 
-                (itemId === '' || item.id.toLowerCase().includes(itemId.toLowerCase())) &&
-                (location === '' || item.location === location)
-            );
-
-            displayResults(foundItems, priority);
+        locateBtn.addEventListener('click', async function() {
+            const itemName = itemIdInput.value;
+            if (!itemName) {
+                showNotification('Please enter an item name', 'danger');
+                return;
+            }
+            await retrieveItems(itemName);
         });
 
         // Handle clear button click
